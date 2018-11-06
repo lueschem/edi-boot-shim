@@ -1,0 +1,35 @@
+# general things to ignore
+build/
+dist/
+*.egg-info/
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
+.eggs/
+
+# pytest
+.cache
+htmlcov/
+.coverage
+
+# sphinx
+docs/_build/
+
+# eclipse
+.settings/
+
+# debian
+debian/edi-boot-shim/
+debian/edi-boot-shim.*.debhelper
+debian/debhelper-build-stamp
+debian/edi-boot-shim.debhelper.log
+debian/edi-boot-shim.substvars
+debian/.debhelper
+debian/files
+.pybuild/
+
+
+# development IDEs
+.idea/

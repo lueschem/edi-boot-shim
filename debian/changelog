@@ -1,0 +1,5 @@
+edi-boot-shim (0.1.1+deb9) stretch; urgency=medium
+
+  * Initial version.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Tue, 06 Nov 2018 21:28:21 +0100

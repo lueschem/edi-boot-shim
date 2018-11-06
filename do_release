@@ -1,0 +1,100 @@
+#!/bin/bash
+
+# Create a new edi-boot-shim release that can be uploaded to a repository.
+#
+# usage: do_release 0.2.0
+
+set -e
+set -o errexit
+set -o pipefail
+
+if [ -z ${1} ]
+then
+    >&2 echo "Error: Usage: ${0} VERSION"
+    exit 1
+fi
+
+set -o nounset
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd ${SCRIPTDIR}
+
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]
+then
+    >&2 echo "Error: please switch to the master branch before doing a release!"
+    exit 1
+fi
+
+if ! git diff --exit-code --quiet
+then
+    >&2 echo "Error: there are unstaged changes!"
+    exit 1
+fi
+
+if ! git diff --cached --exit-code --quiet
+then
+    >&2 echo "Error: there are uncommitted changes!"
+    exit 1
+fi
+
+git clean -dxf
+
+source /etc/os-release
+
+RAW_VERSION="${1}"
+
+if [ "${ID}" == "ubuntu" ]
+then
+    NEW_VERSION="${1}+u$(echo ${VERSION_ID} | sed s#\\.##g)"
+elif [ "${ID}" == "debian" ]
+then
+    NEW_VERSION="${1}+deb$(echo ${VERSION_ID} | sed s#\\.##g)"
+    VERSION_CODENAME=$(echo ${VERSION} | awk -F"[)(]+" '{print $2}')
+else
+    >&2 echo "Error: unhandled operating system id (${ID})!"
+    exit 1
+fi
+
+if [ "${VERSION_ID}" == "9" ]
+then
+    GIT_BRANCH="master"
+else
+    GIT_BRANCH="${NEW_VERSION}"
+    git checkout -b ${GIT_BRANCH}
+fi
+
+SETUP_PY="setup.py"
+sed -i "s/^    version=.*/    version='${NEW_VERSION}',/g" ${SETUP_PY}
+git add ${SETUP_PY}
+
+SPHINX_CONFIG="docs/conf.py"
+sed -i "s/^version =.*/version = '${NEW_VERSION}'/g" ${SPHINX_CONFIG}
+sed -i "s/^release =.*/release = '${NEW_VERSION}'/g" ${SPHINX_CONFIG}
+git add ${SPHINX_CONFIG}
+
+VERSION_HELPERS="edi_boot_shim/lib/versionhelpers.py"
+sed -i "s/^edi_boot_shim_fallback_version =.*/edi_boot_shim_fallback_version = '${NEW_VERSION}'/g" ${VERSION_HELPERS}
+git add ${VERSION_HELPERS}
+
+if [ "${GIT_BRANCH}" == "master" ]
+then
+    gbp dch --new-version ${NEW_VERSION} --release --distribution ${VERSION_CODENAME} --debian-branch ${GIT_BRANCH} --debian-tag v%\(version\)s
+else
+    dch -b --newversion ${NEW_VERSION} --distribution ${VERSION_CODENAME}
+fi
+
+git add debian/changelog
+git commit -m "New version ${NEW_VERSION}."
+git tag -a v${NEW_VERSION} -m "New version ${NEW_VERSION}."
+
+if [ "${GIT_BRANCH}" == "master" ]
+then
+    git tag -a v${RAW_VERSION} -m "Tag for setuptools scm."
+fi
+
+debuild -us -uc
+
+git push origin ${GIT_BRANCH}
+git push --tags
+git checkout master
+
