@@ -81,7 +81,7 @@ setup(
     package_data={
     },
 
-    # data_files=[('my_data', ['data/data_file'])],
+    data_files=[('/etc/edi-boot-shim/', ['templates/boot.cmd.j2'])],
 
     entry_points={
         'console_scripts': [
