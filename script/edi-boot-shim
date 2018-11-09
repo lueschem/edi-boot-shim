@@ -67,12 +67,31 @@ cp ${SCRIPT_TEMPLATE} ${GENERATED_SCRIPT}
 
 sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_SCRIPT}
 
-DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
-
+# This script assumes that the Raspberry Pi vfat bootloader partition
+# is mounted to BOOTLOADER_DIR.
 BOOTLOADER_DIR="/boot/firmware"
+
+if ischroot
+then
+    # Chroot detected - skip mount point check.
+    true
+elif test -e /usr/bin/systemd-detect-virt && systemd-detect-virt -q
+then
+    # Virtualization detected - skip mount point check.
+    true
+elif ! mountpoint -q ${BOOTLOADER_DIR}
+then
+    >&2 echo "Error: Missing ${BOOTLOADER_DIR} - you should probably mount it."
+    exit 1
+fi
+
 mkdir -p ${BOOTLOADER_DIR}
-mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIR}/boot.scr
+
+DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
+mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIR}/boot.scr > /dev/null
 
 rm -f ${GENERATED_SCRIPT}
 trap - EXIT
+
+echo "Success: ${KERNEL_PACKAGE_NAME} is configured for next boot!"
 

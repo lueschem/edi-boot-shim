@@ -1,2 +1,3 @@
 template/boot.cmd /etc/edi-boot-shim/
 script/edi-boot-shim /usr/bin/
+hook/zz-edi-boot-shim /etc/kernel/postinst.d/

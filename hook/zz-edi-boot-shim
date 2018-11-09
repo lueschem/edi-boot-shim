@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Update the u-boot configuration after the installation of
+# a new kernel.
+
+set -o errexit
+set -o nounset
+
+# Check 
+# https://kernel-team.pages.debian.net/kernel-handbook/ch-update-hooks.html
+# for details.
+
+exec </dev/null >&2
+eval set -- "$DEB_MAINT_PARAMS"
+
+# Only run on configure to avoid unnecessary work.
+case "$1" in
+    configure)
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+echo "Configuring ${DPKG_MAINTSCRIPT_PACKAGE} for next boot!"
+/usr/bin/edi-boot-shim ${DPKG_MAINTSCRIPT_PACKAGE}
+
