@@ -69,7 +69,9 @@ sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED
 
 DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
 
-mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} /boot/boot.scr
+BOOTLOADER_DIR="/boot/firmware"
+mkdir -p ${BOOTLOADER_DIR}
+mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIR}/boot.scr
 
 rm -f ${GENERATED_SCRIPT}
 trap - EXIT
