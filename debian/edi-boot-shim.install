@@ -1,0 +1,2 @@
+template/boot.cmd /etc/edi-boot-shim/
+script/edi-boot-shim /usr/bin/

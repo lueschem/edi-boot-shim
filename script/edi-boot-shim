@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Small utility that helps updating the u-boot boot configuration
+# without copying around initial ramdisks and kernels.
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+echo_usage()
+{
+    echo "Usage: edi-boot-shim KERNEL_PACKAGE_NAME"
+    echo "Example: edi-boot-shim linux-image-4.18.0-2-arm64"
+    echo "Please check the man page for more information."
+}
+
+cleanup_and_exit()
+{
+    rm -f ${GENERATED_SCRIPT}
+    >&2 echo "Error: Abnormal script termination."
+    exit 1
+} 
+
+if [[ "$#" -eq 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]
+then
+    echo_usage
+    exit 0
+fi
+
+if [ "$#" -ne 1 ]
+then
+    >&2 echo "Error: Illegal number of parameters."
+    echo_usage
+    exit 1
+fi
+
+if [[ $EUID -ne 0 ]]
+then
+    >&2 echo "Error: This script must be run as root."
+    exit 1
+fi
+
+KERNEL_PACKAGE_NAME="${1}"
+
+KERNEL_PACKAGE_PREFIX="linux-image-"
+if [[ ${KERNEL_PACKAGE_NAME} != "${KERNEL_PACKAGE_PREFIX}"* ]]
+then
+    >&2 echo "Error: ${KERNEL_PACKAGE_NAME} does not look like a kernel package name."
+    exit 1
+fi
+
+if ! dpkg -l ${KERNEL_PACKAGE_NAME} > /dev/null 2>&1
+then
+    >&2 echo "Error: ${KERNEL_PACKAGE_NAME} is not installed."
+    exit 1
+fi
+
+KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#${KERNEL_PACKAGE_PREFIX}}"
+
+SCRIPT_TEMPLATE="/etc/edi-boot-shim/boot.cmd"
+
+GENERATED_SCRIPT="/tmp/${KERNEL_PACKAGE_NAME}.boot.cmd"
+
+trap cleanup_and_exit EXIT
+
+cp ${SCRIPT_TEMPLATE} ${GENERATED_SCRIPT}
+
+sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_SCRIPT}
+
+DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
+
+mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} /boot/boot.scr
+
+rm -f ${GENERATED_SCRIPT}
+trap - EXIT
+
