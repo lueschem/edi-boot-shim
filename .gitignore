@@ -33,3 +33,5 @@ debian/files
 
 # development IDEs
 .idea/
+/man/edi-boot-shim.1
+/man/edi-boot-shim.1.html

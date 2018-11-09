@@ -5,3 +5,7 @@
 %:
 	dh $@
 
+override_dh_auto_build:
+	dh_auto_build
+	ronn man/edi-boot-shim.1.md
+
