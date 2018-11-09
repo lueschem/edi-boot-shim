@@ -1,5 +1,0 @@
-ext4load mmc 0:2 ${kernel_addr_r} /boot/vmlinuz-4.18.0-2-arm64
-ext4load mmc 0:2 ${fdt_addr_r} /usr/lib/linux-image-4.18.0-2-arm64/${fdtfile}
-setenv bootargs console=tty0 console=ttyS1,115200 root=/dev/mmcblk0p2 rw elevator=deadline fsck.repair=yes net.ifnames=0 cma=128M rootwait
-ext4load mmc 0:2 ${ramdisk_addr_r} /boot/initrd.img-4.18.0-2-arm64
-booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
