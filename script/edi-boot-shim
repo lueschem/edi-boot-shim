@@ -43,10 +43,12 @@ cleanup_and_exit()
     exit 1
 }
 
+DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
+
 # default values
 BOOTLOADER_DIRECTORY="/boot/firmware"
 CHECK_MOUNT=true
-BOOT_COMMAND_TEMPLATE="/etc/edi-boot-shim/boot.cmd"
+BOOT_COMMAND_TEMPLATE="/etc/edi-boot-shim/boot.cmd.rpi.${DEBIAN_ARCHITECTURE}"
 
 EDI_BOOT_SHIM_CFG="/etc/edi-boot-shim/edi-boot-shim.cfg"
 if [ -f "${EDI_BOOT_SHIM_CFG}" ]
@@ -118,8 +120,6 @@ then
 fi
 
 mkdir -p ${BOOTLOADER_DIRECTORY}
-
-DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
 
 case "${DEBIAN_ARCHITECTURE}" in
     "armhf" | "armel")

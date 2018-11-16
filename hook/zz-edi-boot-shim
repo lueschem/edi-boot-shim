@@ -28,6 +28,8 @@
 set -o errexit
 set -o nounset
 
+DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
+
 # default values
 AUTO_UPDATE_BOOTLOADER=true
 
