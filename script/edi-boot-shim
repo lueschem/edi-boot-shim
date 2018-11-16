@@ -120,7 +120,17 @@ fi
 mkdir -p ${BOOTLOADER_DIRECTORY}
 
 DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
-mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+
+case "${DEBIAN_ARCHITECTURE}" in
+    "armhf" | "armel")
+        U_BOOT_ARCHITECTURE="arm"
+	;;
+    *)
+        U_BOOT_ARCHITECTURE="${DEBIAN_ARCHITECTURE}"
+	;;
+esac
+
+mkimage -A ${U_BOOT_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
 
 rm -f ${GENERATED_SCRIPT}
 trap - EXIT
