@@ -1,7 +1,29 @@
 #!/bin/bash
 
+# Copyright (C) 2018 Matthias Luescher
+#
+# Authors:
+#  Matthias Luescher
+#
+# This file is part of edi-boot-shim.
+#
+# edi-boot-shim is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# edi-boot-shim is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with edi-boot-shim.  If not, see <http://www.gnu.org/licenses/>.
+
+# ----------------------------------------------------------------------------
 # Small utility that helps updating the u-boot boot configuration
 # without copying around initial ramdisks and kernels.
+# ----------------------------------------------------------------------------
 
 set -o errexit
 set -o nounset
@@ -19,7 +41,18 @@ cleanup_and_exit()
     rm -f ${GENERATED_SCRIPT}
     >&2 echo "Error: Abnormal script termination."
     exit 1
-} 
+}
+
+# default values
+BOOTLOADER_DIRECTORY="/boot/firmware"
+CHECK_MOUNT=true
+BOOT_COMMAND_TEMPLATE="/etc/edi-boot-shim/boot.cmd"
+
+EDI_BOOT_SHIM_CFG="/etc/edi-boot-shim/edi-boot-shim.cfg"
+if [ -f "${EDI_BOOT_SHIM_CFG}" ]
+then
+    source "${EDI_BOOT_SHIM_CFG}"
+fi
 
 if [[ "$#" -eq 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]
 then
@@ -56,22 +89,21 @@ then
 fi
 
 KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#${KERNEL_PACKAGE_PREFIX}}"
-
-SCRIPT_TEMPLATE="/etc/edi-boot-shim/boot.cmd"
-
 GENERATED_SCRIPT="/tmp/${KERNEL_PACKAGE_NAME}.boot.cmd"
 
 trap cleanup_and_exit EXIT
 
-cp ${SCRIPT_TEMPLATE} ${GENERATED_SCRIPT}
+cp ${BOOT_COMMAND_TEMPLATE} ${GENERATED_SCRIPT}
 
 sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_SCRIPT}
 
-# This script assumes that the Raspberry Pi vfat bootloader partition
-# is mounted to BOOTLOADER_DIR.
-BOOTLOADER_DIR="/boot/firmware"
+# This script assumes that the bootloader partition is mounted to BOOTLOADER_DIRECTORY.
 
-if ischroot
+if [ "${CHECK_MOUNT}" = false ]
+then
+    # Mount point check disabled by configuration.
+    true
+elif ischroot
 then
     # Chroot detected - skip mount point check.
     true
@@ -79,16 +111,16 @@ elif test -e /usr/bin/systemd-detect-virt && systemd-detect-virt -q
 then
     # Virtualization detected - skip mount point check.
     true
-elif ! mountpoint -q ${BOOTLOADER_DIR}
+elif ! mountpoint -q ${BOOTLOADER_DIRECTORY}
 then
-    >&2 echo "Error: Missing ${BOOTLOADER_DIR} - you should probably mount it."
+    >&2 echo "Error: Missing ${BOOTLOADER_DIRECTORY} - you should probably mount it."
     exit 1
 fi
 
-mkdir -p ${BOOTLOADER_DIR}
+mkdir -p ${BOOTLOADER_DIRECTORY}
 
 DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
-mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIR}/boot.scr > /dev/null
+mkimage -A ${DEBIAN_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
 
 rm -f ${GENERATED_SCRIPT}
 trap - EXIT

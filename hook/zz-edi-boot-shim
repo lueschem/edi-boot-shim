@@ -1,10 +1,41 @@
 #!/bin/bash
 
+# Copyright (C) 2018 Matthias Luescher
+#
+# Authors:
+#  Matthias Luescher
+#
+# This file is part of edi-boot-shim.
+#
+# edi-boot-shim is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# edi-boot-shim is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with edi-boot-shim.  If not, see <http://www.gnu.org/licenses/>.
+
+# ----------------------------------------------------------------------------
 # Update the u-boot configuration after the installation of
 # a new kernel.
+# ----------------------------------------------------------------------------
 
 set -o errexit
 set -o nounset
+
+# default values
+AUTO_UPDATE_BOOTLOADER=true
+
+EDI_BOOT_SHIM_CFG="/etc/edi-boot-shim/edi-boot-shim.cfg"
+if [ -f "${EDI_BOOT_SHIM_CFG}" ]
+then
+    source "${EDI_BOOT_SHIM_CFG}"
+fi
 
 # Check 
 # https://kernel-team.pages.debian.net/kernel-handbook/ch-update-hooks.html
@@ -22,6 +53,12 @@ case "$1" in
         ;;
 esac
 
-echo "Configuring ${DPKG_MAINTSCRIPT_PACKAGE} for next boot!"
-/usr/bin/edi-boot-shim ${DPKG_MAINTSCRIPT_PACKAGE}
+if [ "${AUTO_UPDATE_BOOTLOADER}" = true ]
+then
+    echo "Configuring ${DPKG_MAINTSCRIPT_PACKAGE} for next boot!"
+    /usr/bin/edi-boot-shim ${DPKG_MAINTSCRIPT_PACKAGE}
+else
+    echo "Automatic bootloader update is disabled by configuration."
+    echo "Use 'sudo edi-boot-shim ${DPKG_MAINTSCRIPT_PACKAGE}' to switch to the new kernel."
+fi
 
