@@ -90,6 +90,12 @@ then
     exit 1
 fi
 
+if dpkg -s ${KERNEL_PACKAGE_NAME} | grep "^Depends: linux-image" > /dev/null
+then
+    >&2 echo "Error: ${KERNEL_PACKAGE_NAME} is a meta package."
+    exit 1
+fi
+
 KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#${KERNEL_PACKAGE_PREFIX}}"
 GENERATED_SCRIPT="/tmp/${KERNEL_PACKAGE_NAME}.boot.cmd"
 
