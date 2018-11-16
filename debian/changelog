@@ -1,7 +1,7 @@
 edi-boot-shim (0.3.2+deb9) stretch; urgency=medium
 
   [ Matthias Lüscher ]
-  * Make boot.cmd template architecture dependant.
+  * Make boot.cmd template architecture dependent.
 
  -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 10:39:31 +0000
 
