@@ -1,0 +1,5 @@
+Instead of modifying /etc/edi-boot-shim/edi-boot-shim.cfg directly
+it is possible to put custom *.cfg files into
+this folder (/etc/edi-boot-shim/edi-boot-shim.cfg.d)!
+
+The syntax is the same as for /etc/edi-boot-shim/edi-boot-shim.cfg.

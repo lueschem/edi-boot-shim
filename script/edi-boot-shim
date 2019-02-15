@@ -56,6 +56,15 @@ then
     source "${EDI_BOOT_SHIM_CFG}"
 fi
 
+CONFIG_PARTS="${EDI_BOOT_SHIM_CFG}.d"
+if [ -d "${CONFIG_PARTS}" ]
+then
+    for config_part in $(ls ${CONFIG_PARTS}/*.cfg 2> /dev/null)
+    do
+        source ${config_part}
+    done
+fi
+
 if [[ "$#" -eq 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]
 then
     echo_usage

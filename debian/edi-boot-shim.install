@@ -1,4 +1,5 @@
 template/* /etc/edi-boot-shim/
 config/edi-boot-shim.cfg /etc/edi-boot-shim/
+config/README /etc/edi-boot-shim/edi-boot-shim.cfg.d/
 script/edi-boot-shim /usr/bin/
 hook/zz-edi-boot-shim /etc/kernel/postinst.d/
