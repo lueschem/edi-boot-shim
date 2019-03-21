@@ -1,3 +1,10 @@
+edi-boot-shim (0.5.0+deb9) stretch; urgency=medium
+
+  [ Matthias Lüscher ]
+  * Added boot script template for cl-som-imx7.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Thu, 21 Mar 2019 16:04:38 +0000
+
 edi-boot-shim (0.4.0+deb9) stretch; urgency=medium
 
   [ Matthias Lüscher ]
