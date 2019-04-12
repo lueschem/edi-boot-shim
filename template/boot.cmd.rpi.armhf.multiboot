@@ -1,4 +1,4 @@
-setenv bootargs console=tty0 console=ttyS1,115200 root=${edi_root_device} rw elevator=deadline fsck.repair=yes net.ifnames=0 cma=128M rootwait
+setenv bootargs console=ttyS1,115200 console=tty0 root=${edi_root_device} rw elevator=deadline fsck.repair=yes net.ifnames=0 cma=128M rootwait
 
 ext4load mmc ${edi_mmc_device} ${kernel_addr_r} /boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
 ext4load mmc ${edi_mmc_device} ${fdt_addr_r} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/${fdtfile}
