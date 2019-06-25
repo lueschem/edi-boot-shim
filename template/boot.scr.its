@@ -1,0 +1,19 @@
+/dts-v1/;
+  
+/ {
+    description = "edi-boot-shim boot script";
+    #address-cells = <1>;
+  
+    images {
+        default@1 {
+            description = "default setup";
+            data = /incbin/("__BOOT_COMMAND_SCRIPT__");
+            type = "script";
+            arch = "__U_BOOT_ARCHITECTURE__";
+            compression = "none";
+            hash@1 {
+                algo = "sha1";
+            };
+        };
+    };
+};

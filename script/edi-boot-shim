@@ -36,9 +36,22 @@ echo_usage()
     echo "Please check the man page for more information."
 }
 
-cleanup_and_exit()
+cleanup()
 {
     rm -f ${GENERATED_SCRIPT}
+    if [ -n "${GENERATED_SCRIPT_ITS}" ]
+    then
+        rm -f ${GENERATED_SCRIPT_ITS}
+    fi
+    if [ -n "${GENERATED_UIMAGE_ITS}" ]
+    then
+        rm -f ${GENERATED_UIMAGE_ITS}
+    fi
+}
+
+cleanup_and_exit()
+{
+    cleanup
     >&2 echo "Error: Abnormal script termination."
     exit 1
 }
@@ -49,6 +62,7 @@ DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
 BOOTLOADER_DIRECTORY="/boot/firmware"
 CHECK_MOUNT=true
 BOOT_COMMAND_TEMPLATE="/etc/edi-boot-shim/boot.cmd.rpi.${DEBIAN_ARCHITECTURE}"
+UIMAGE_FIT_TEMPLATE=""
 
 EDI_BOOT_SHIM_CFG="/etc/edi-boot-shim/edi-boot-shim.cfg"
 if [ -f "${EDI_BOOT_SHIM_CFG}" ]
@@ -107,6 +121,8 @@ fi
 
 KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#${KERNEL_PACKAGE_PREFIX}}"
 GENERATED_SCRIPT="/tmp/${KERNEL_PACKAGE_NAME}.boot.cmd"
+GENERATED_SCRIPT_ITS=""
+GENERATED_UIMAGE_ITS=""
 
 trap cleanup_and_exit EXIT
 
@@ -145,9 +161,23 @@ case "${DEBIAN_ARCHITECTURE}" in
 	;;
 esac
 
-mkimage -A ${U_BOOT_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+if [ -z "${UIMAGE_FIT_TEMPLATE}" ]
+then
+    mkimage -A ${U_BOOT_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+else
+    GENERATED_UIMAGE_ITS="/tmp/${KERNEL_PACKAGE_NAME}.uimage.its"
+    cp ${UIMAGE_FIT_TEMPLATE} ${GENERATED_UIMAGE_ITS}
+    sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_UIMAGE_ITS}
+    mkimage -f ${GENERATED_UIMAGE_ITS} ${BOOTLOADER_DIRECTORY}/uimage.${KERNEL_PACKAGE_VERSION} > /dev/null
 
-rm -f ${GENERATED_SCRIPT}
+    GENERATED_SCRIPT_ITS="/tmp/${KERNEL_PACKAGE_NAME}.boot.scr.its"
+    cp /etc/edi-boot-shim/boot.scr.its ${GENERATED_SCRIPT_ITS}
+    sed -i 's@__BOOT_COMMAND_SCRIPT__@'"${GENERATED_SCRIPT}"'@' ${GENERATED_SCRIPT_ITS}
+    sed -i 's@__U_BOOT_ARCHITECTURE__@'"${U_BOOT_ARCHITECTURE}"'@' ${GENERATED_SCRIPT_ITS}
+    mkimage -f ${GENERATED_SCRIPT_ITS} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+fi
+
+cleanup
 trap - EXIT
 
 echo "Success: ${KERNEL_PACKAGE_NAME} is configured for next boot!"
