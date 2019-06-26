@@ -39,14 +39,8 @@ echo_usage()
 cleanup()
 {
     rm -f ${GENERATED_SCRIPT}
-    if [ -n "${GENERATED_SCRIPT_ITS}" ]
-    then
-        rm -f ${GENERATED_SCRIPT_ITS}
-    fi
-    if [ -n "${GENERATED_UIMAGE_ITS}" ]
-    then
-        rm -f ${GENERATED_UIMAGE_ITS}
-    fi
+    rm -f ${GENERATED_SCRIPT_ITS}
+    rm -f ${GENERATED_UIMAGE_ITS}
 }
 
 cleanup_and_exit()
@@ -121,8 +115,8 @@ fi
 
 KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#${KERNEL_PACKAGE_PREFIX}}"
 GENERATED_SCRIPT="/tmp/${KERNEL_PACKAGE_NAME}.boot.cmd"
-GENERATED_SCRIPT_ITS=""
-GENERATED_UIMAGE_ITS=""
+GENERATED_SCRIPT_ITS="/tmp/${KERNEL_PACKAGE_NAME}.boot.scr.its"
+GENERATED_UIMAGE_ITS="/tmp/${KERNEL_PACKAGE_NAME}.uimage.its"
 
 trap cleanup_and_exit EXIT
 
@@ -165,12 +159,10 @@ if [ -z "${UIMAGE_FIT_TEMPLATE}" ]
 then
     mkimage -A ${U_BOOT_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
 else
-    GENERATED_UIMAGE_ITS="/tmp/${KERNEL_PACKAGE_NAME}.uimage.its"
     cp ${UIMAGE_FIT_TEMPLATE} ${GENERATED_UIMAGE_ITS}
     sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_UIMAGE_ITS}
     mkimage -f ${GENERATED_UIMAGE_ITS} ${BOOTLOADER_DIRECTORY}/uimage.${KERNEL_PACKAGE_VERSION} > /dev/null
 
-    GENERATED_SCRIPT_ITS="/tmp/${KERNEL_PACKAGE_NAME}.boot.scr.its"
     cp /etc/edi-boot-shim/boot.scr.its ${GENERATED_SCRIPT_ITS}
     sed -i 's@__BOOT_COMMAND_SCRIPT__@'"${GENERATED_SCRIPT}"'@' ${GENERATED_SCRIPT_ITS}
     sed -i 's@__U_BOOT_ARCHITECTURE__@'"${U_BOOT_ARCHITECTURE}"'@' ${GENERATED_SCRIPT_ITS}
