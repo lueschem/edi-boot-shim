@@ -1,6 +1,6 @@
 setenv bootargs console=ttymxc0,115200 root=${edi_root_device} rootwait rw
 setenv fit_loadaddr 0x82000000
-if test -n "${edi_uimage_folder}" || setenv edi_uimage_folder /boot
+test -n "${edi_uimage_folder}" || setenv edi_uimage_folder /boot
 
 ext4load mmc ${edi_mmc_device} ${fit_loadaddr} ${edi_uimage_folder}/uimage.__KERNEL_PACKAGE_VERSION__
 
