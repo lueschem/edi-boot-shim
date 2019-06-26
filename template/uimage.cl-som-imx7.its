@@ -1,9 +1,9 @@
 /dts-v1/;
-  
+
 / {
     description = "U-Boot fitImage for cl-som-imx7 (__KERNEL_PACKAGE_VERSION__)";
     #address-cells = <1>;
-  
+
     images {
         kernel@0 {
             description = "Linux kernel";

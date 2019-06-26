@@ -1,8 +1,0 @@
-setenv bootargs console=ttymxc0,115200 root=${edi_root_device} rootwait rw
-
-setenv fit_loadaddr 0x82000000
-
-ext4load mmc ${edi_mmc_device} ${fit_loadaddr} /boot/uimage.__KERNEL_PACKAGE_VERSION__
-
-bootm ${fit_loadaddr}
-
