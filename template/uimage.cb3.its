@@ -30,6 +30,19 @@
                 algo = "sha1";
             };
         };
+	fdt@1 {
+            description = "device tree blob";
+            data = /incbin/("/usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/imx7d-cb3-proto.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            load = <0x83000000>;
+            entry = <0x83000000>;
+            compression = "none";
+            hash@1 {
+                algo = "sha1";
+            };
+        };
+
         ramdisk@0 {
             description = "ramdisk";
             data = /incbin/("/boot/initrd.img-__KERNEL_PACKAGE_VERSION__");
@@ -55,6 +68,18 @@
                 sign-images = "fdt", "kernel", "ramdisk";
             };
         };
+	conf@2 {
+            description = "boot Linux kernel with dtb and ramdisk";
+            kernel = "kernel@0";
+            fdt = "fdt@1";
+            ramdisk = "ramdisk@0";
+            signature@1 {
+                algo = "sha1,rsa2048";
+                key-name-hint = "fit-key";
+                sign-images = "fdt", "kernel", "ramdisk";
+            };
+        };
+
     };
 };
 

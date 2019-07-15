@@ -4,5 +4,9 @@ test -n "${edi_uimage_folder}" || setenv edi_uimage_folder /boot
 
 ext4load mmc ${edi_mmc_device} ${fit_loadaddr} ${edi_uimage_folder}/uimage.__KERNEL_PACKAGE_VERSION__
 
-bootm ${fit_loadaddr}
-
+if test -n "${fit_conf_name}"
+then
+	bootm ${fit_loadaddr}#${fit_conf_name}
+else
+	bootm ${fit_loadaddr}
+fi
