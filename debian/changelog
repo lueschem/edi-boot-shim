@@ -1,3 +1,13 @@
+edi-boot-shim (0.8.0+deb9) stretch; urgency=medium
+
+  [ Marco Migliore ]
+  * Add multiple fdt configuration handling
+
+  [ Matthias Lüscher ]
+  * Added arm64 configuration for the Raspberry Pi 4.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Thu, 26 Dec 2019 10:16:57 +0000
+
 edi-boot-shim (0.7.0+deb9) stretch; urgency=medium
 
   * Optionally boot cl-som-imx7/CB3 using FIT images.
