@@ -3,92 +3,92 @@ edi-boot-shim (0.8.0+deb9) stretch; urgency=medium
   [ Marco Migliore ]
   * Add multiple fdt configuration handling
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Added arm64 configuration for the Raspberry Pi 4.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Thu, 26 Dec 2019 10:16:57 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Thu, 26 Dec 2019 10:16:57 +0000
 
 edi-boot-shim (0.7.0+deb9) stretch; urgency=medium
 
   * Optionally boot cl-som-imx7/CB3 using FIT images.
 
- -- Matthias L�scher (Launchpad) <m.luescher@datacomm.ch>  Wed, 26 Jun 2019 09:03:56 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Wed, 26 Jun 2019 09:03:56 +0000
 
 edi-boot-shim (0.6.1+deb9) stretch; urgency=medium
 
   * Fixed build on buster.
 
- -- Matthias Lüscher(Launchpad) <m.luescher@datacomm.ch>  Fri, 14 Jun 2019 19:25:13 +0000
+ -- Matthias Luescher(Launchpad) <m.luescher@datacomm.ch>  Fri, 14 Jun 2019 19:25:13 +0000
 
 edi-boot-shim (0.6.0+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Added boot configuration for NXP sabre imx7 board.
   * Raspberry Pi: Make sure that systemd output gets displayed on HDMI.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 12 Apr 2019 19:36:36 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 12 Apr 2019 19:36:36 +0000
 
 edi-boot-shim (0.5.0+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Added boot script template for cl-som-imx7.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Thu, 21 Mar 2019 16:04:38 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Thu, 21 Mar 2019 16:04:38 +0000
 
 edi-boot-shim (0.4.0+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Added possibility of split config.
   * Added multiboot templates.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 15 Feb 2019 09:31:00 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 15 Feb 2019 09:31:00 +0000
 
 edi-boot-shim (0.3.4+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Make sure that the selected package is not a meta package.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 16:52:17 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 16:52:17 +0000
 
 edi-boot-shim (0.3.3+deb9) stretch; urgency=medium
 
   [ Matthias Luescher ]
   * Fixed typo.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 10:41:44 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 10:41:44 +0000
 
 edi-boot-shim (0.3.2+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Make boot.cmd template architecture dependent.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 10:39:31 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 10:39:31 +0000
 
 edi-boot-shim (0.3.1+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Fixed bootloader setup for armhf.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 09:42:35 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 09:42:35 +0000
 
 edi-boot-shim (0.3.0+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Added configuration options.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 08:57:24 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Fri, 16 Nov 2018 08:57:24 +0000
 
 edi-boot-shim (0.2.0+deb9) stretch; urgency=medium
 
-  [ Matthias Lüscher ]
+  [ Matthias Luescher ]
   * Added initial boot command template.
   * Added script that writes the boot image.
   * Added kernel postinst hook.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Tue, 13 Nov 2018 19:28:59 +0000
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Tue, 13 Nov 2018 19:28:59 +0000
 
 edi-boot-shim (0.1.1+deb9) stretch; urgency=medium
 
   * Initial version.
 
- -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Tue, 06 Nov 2018 21:28:21 +0100
+ -- Matthias Luescher (Launchpad) <m.luescher@datacomm.ch>  Tue, 06 Nov 2018 21:28:21 +0100
