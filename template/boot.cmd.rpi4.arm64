@@ -1,0 +1,10 @@
+# reuse the device tree that got loaded and modified by the raspberry pi bootloader
+fdt addr ${fdt_addr}
+fdt get value bootargs /chosen bootargs
+# adjust the root partition
+setexpr bootargs gsub /dev/edi_root_device /dev/mmcblk0p2 "${bootargs}"
+
+ext4load mmc 0:2 ${kernel_addr_r} /boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
+ext4load mmc 0:2 ${ramdisk_addr_r} /boot/initrd.img-__KERNEL_PACKAGE_VERSION__
+
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr}
