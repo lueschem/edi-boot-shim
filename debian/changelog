@@ -1,3 +1,10 @@
+edi-boot-shim (0.8.1+deb9) stretch; urgency=medium
+
+  [ Matthias Luescher ]
+  * Fixed changelog encoding issue.
+
+ -- Matthias Luescher <matthias.luescher@schindler.com>  Thu, 09 Apr 2020 18:44:56 +0000
+
 edi-boot-shim (0.8.0+deb9) stretch; urgency=medium
 
   [ Marco Migliore ]
