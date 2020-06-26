@@ -1,7 +1,7 @@
 setenv bootargs console=${console} root=${edi_root_device} rw
 
 ext4load ${iface} ${edi_mmc_device} ${loadaddr} /boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
-ext4load ${iface} ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/${fdt_file}
+ext4load ${iface} ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/compulab/${fdt_file}
 
 booti ${loadaddr} - ${fdt_addr}
 
