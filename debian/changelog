@@ -1,3 +1,10 @@
+edi-boot-shim (0.10.0+deb10) buster; urgency=medium
+
+  * Prepare dynamic boot for UCM-IMX8M-MINI.
+  * Added support for VAR-SOM-MX8M-NANO.
+
+ -- Matthias Luescher <lueschem@gmail.com>  Sun, 13 Sep 2020 09:39:00 +0000
+
 edi-boot-shim (0.9.0+deb10) buster; urgency=medium
 
   [ Matthias Lüscher ]
