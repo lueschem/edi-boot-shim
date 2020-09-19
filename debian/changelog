@@ -1,3 +1,9 @@
+edi-boot-shim (0.11.0+deb10) buster; urgency=medium
+
+  * Adjust bootargs to play nicely with latest IOT-GATE-iMX8 bootloader.
+
+ -- Matthias Luescher <lueschem@gmail.com>  Sat, 19 Sep 2020 22:23:05 +0000
+
 edi-boot-shim (0.10.0+deb10) buster; urgency=medium
 
   * Prepare dynamic boot for UCM-IMX8M-MINI.
