@@ -39,6 +39,8 @@ fi
 
 git clean -dxf
 
+VERSION_ID=11
+VERSION="11 (bullseye)"
 source /etc/os-release
 
 RAW_VERSION="${1}"
