@@ -1,3 +1,9 @@
+edi-boot-shim (0.12.0+deb11) bullseye; urgency=medium
+
+  * Debian bullseye build. 
+
+ -- Matthias Luescher <lueschem@gmail.com>  Fri, 14 May 2021 21:17:21 +0000
+
 edi-boot-shim (0.12.0+deb10) buster; urgency=medium
 
   [ Matthias Lüscher ]
