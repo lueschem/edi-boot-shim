@@ -2,7 +2,6 @@ Source: edi-boot-shim
 Section: devel
 Priority: optional
 Build-Depends: debhelper (>= 9),
-               u-boot-tools,
                ruby-ronn (<< 0.8.0) | ronn,
 Maintainer: Matthias Luescher <lueschem@gmail.com>
 Standards-Version: 3.9.8
@@ -10,8 +9,5 @@ Standards-Version: 3.9.8
 Package: edi-boot-shim
 Architecture: all
 Depends: ${misc:Depends},
-         u-boot-tools,
 Description: Embedded Development Infrastructure Boot Shim
- Small utility that helps updating the u-boot boot configuration
- without copying around initial ramdisks and kernels.
-
+ Small utility that helps updating the boot configuration.
