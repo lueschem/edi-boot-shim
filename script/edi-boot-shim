@@ -38,9 +38,9 @@ echo_usage()
 
 cleanup()
 {
-    rm -f ${GENERATED_SCRIPT}
-    rm -f ${GENERATED_SCRIPT_ITS}
-    rm -f ${GENERATED_UIMAGE_ITS}
+    rm -f "${GENERATED_SCRIPT}"
+    rm -f "${GENERATED_SCRIPT_ITS}"
+    rm -f "${GENERATED_UIMAGE_ITS}"
 }
 
 cleanup_and_exit()
@@ -50,9 +50,22 @@ cleanup_and_exit()
     exit 1
 }
 
+copy_or_link()
+{
+    local SOURCE="${1}"
+    local DEST="${2}"
+    if [ "$(stat -c "%m" "${SOURCE%/*}")" == "$(stat -c "%m" "${DEST%/*}")" ]
+    then
+        ln -sf "${SOURCE}" "${DEST}"
+    else
+        cp "${SOURCE}" "${DEST}"
+    fi
+}
+
 DEBIAN_ARCHITECTURE="$(dpkg --print-architecture)"
 
 # default values
+BOOTLOADER_TYPE="u-boot"
 BOOTLOADER_DIRECTORY="/boot/firmware"
 CHECK_MOUNT=true
 BOOT_COMMAND_TEMPLATE="/etc/edi-boot-shim/boot.cmd.rpi.${DEBIAN_ARCHITECTURE}"
@@ -67,9 +80,10 @@ fi
 CONFIG_PARTS="${EDI_BOOT_SHIM_CFG}.d"
 if [ -d "${CONFIG_PARTS}" ]
 then
-    for config_part in $(ls ${CONFIG_PARTS}/*.cfg 2> /dev/null)
+    for config_part in "${CONFIG_PARTS}"/*.cfg
     do
-        source ${config_part}
+        [[ -e "${config_part}" ]] || break
+        source "${config_part}"
     done
 fi
 
@@ -101,13 +115,13 @@ then
     exit 1
 fi
 
-if ! dpkg -l ${KERNEL_PACKAGE_NAME} > /dev/null 2>&1
+if ! dpkg -l "${KERNEL_PACKAGE_NAME}" > /dev/null 2>&1
 then
     >&2 echo "Error: ${KERNEL_PACKAGE_NAME} is not installed."
     exit 1
 fi
 
-if dpkg -s ${KERNEL_PACKAGE_NAME} | grep "^Depends: linux-image" > /dev/null
+if dpkg -s "${KERNEL_PACKAGE_NAME}" | grep "^Depends: linux-image" > /dev/null
 then
     >&2 echo "Error: ${KERNEL_PACKAGE_NAME} is a meta package."
     exit 1
@@ -120,9 +134,9 @@ GENERATED_UIMAGE_ITS="/tmp/${KERNEL_PACKAGE_NAME}.uimage.its"
 
 trap cleanup_and_exit EXIT
 
-cp ${BOOT_COMMAND_TEMPLATE} ${GENERATED_SCRIPT}
+cp "${BOOT_COMMAND_TEMPLATE}" "${GENERATED_SCRIPT}"
 
-sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_SCRIPT}
+sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' "${GENERATED_SCRIPT}"
 
 # This script assumes that the bootloader partition is mounted to BOOTLOADER_DIRECTORY.
 
@@ -146,27 +160,50 @@ fi
 
 mkdir -p ${BOOTLOADER_DIRECTORY}
 
-case "${DEBIAN_ARCHITECTURE}" in
-    "armhf" | "armel")
-        U_BOOT_ARCHITECTURE="arm"
-	;;
-    *)
-        U_BOOT_ARCHITECTURE="${DEBIAN_ARCHITECTURE}"
-	;;
-esac
-
-if [ -z "${UIMAGE_FIT_TEMPLATE}" ]
+if [[ ${BOOTLOADER_TYPE} == "u-boot" ]]
 then
-    mkimage -A ${U_BOOT_ARCHITECTURE} -O linux -T script -d ${GENERATED_SCRIPT} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
-else
-    cp ${UIMAGE_FIT_TEMPLATE} ${GENERATED_UIMAGE_ITS}
-    sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' ${GENERATED_UIMAGE_ITS}
-    mkimage -f ${GENERATED_UIMAGE_ITS} ${BOOTLOADER_DIRECTORY}/uimage.${KERNEL_PACKAGE_VERSION} > /dev/null
+    case "${DEBIAN_ARCHITECTURE}" in
+        "armhf" | "armel")
+            U_BOOT_ARCHITECTURE="arm"
+      ;;
+        *)
+            U_BOOT_ARCHITECTURE="${DEBIAN_ARCHITECTURE}"
+      ;;
+    esac
 
-    cp /etc/edi-boot-shim/boot.scr.its ${GENERATED_SCRIPT_ITS}
-    sed -i 's@__BOOT_COMMAND_SCRIPT__@'"${GENERATED_SCRIPT}"'@' ${GENERATED_SCRIPT_ITS}
-    sed -i 's@__U_BOOT_ARCHITECTURE__@'"${U_BOOT_ARCHITECTURE}"'@' ${GENERATED_SCRIPT_ITS}
-    mkimage -f ${GENERATED_SCRIPT_ITS} ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+    if [ -z "${UIMAGE_FIT_TEMPLATE}" ]
+    then
+        mkimage -A "${U_BOOT_ARCHITECTURE}" -O linux -T script -d "${GENERATED_SCRIPT}" ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+    else
+        cp "${UIMAGE_FIT_TEMPLATE}" "${GENERATED_UIMAGE_ITS}"
+        sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' "${GENERATED_UIMAGE_ITS}"
+        mkimage -f "${GENERATED_UIMAGE_ITS}" "${BOOTLOADER_DIRECTORY}/uimage.${KERNEL_PACKAGE_VERSION}" > /dev/null
+
+        cp /etc/edi-boot-shim/boot.scr.its "${GENERATED_SCRIPT_ITS}"
+        sed -i 's@__BOOT_COMMAND_SCRIPT__@'"${GENERATED_SCRIPT}"'@' "${GENERATED_SCRIPT_ITS}"
+        sed -i 's@__U_BOOT_ARCHITECTURE__@'"${U_BOOT_ARCHITECTURE}"'@' "${GENERATED_SCRIPT_ITS}"
+        mkimage -f "${GENERATED_SCRIPT_ITS}" ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
+    fi
+elif  [[ ${BOOTLOADER_TYPE} == "raspberry-pi" ]]
+then
+    source "${GENERATED_SCRIPT}"
+    copy_or_link "${kernel_image}" "${BOOTLOADER_DIRECTORY}/vmlinuz"
+    if [ -n "${initramfs_image}" ]
+    then
+        copy_or_link "${initramfs_image}" "${BOOTLOADER_DIRECTORY}/initrd.img"
+    fi
+    for dtb in "${device_tree_binaries[@]}"
+    do
+        copy_or_link "${dtb}" "${BOOTLOADER_DIRECTORY}/"
+    done
+    mkdir -p ${BOOTLOADER_DIRECTORY}/overlays
+    for dtbo in "${device_tree_binary_overlays[@]}"
+    do
+        copy_or_link "${dtbo}" "${BOOTLOADER_DIRECTORY}/overlays/"
+    done
+else
+    >&2 echo "Error: Unknown bootloader type: ${BOOTLOADER_TYPE}."
+    exit 1
 fi
 
 cleanup

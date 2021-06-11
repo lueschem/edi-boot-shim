@@ -7,8 +7,7 @@ edi-boot-shim(1) -- Embedded Development Infrastructure Boot Shim
 
 ## DESCRIPTION
 
-Small utility that helps updating the u-boot boot configuration
-without copying around initial ramdisks and kernels.
+Small utility that helps updating the bootloader configuration.
 
 ## OPTIONS
 
@@ -17,14 +16,14 @@ without copying around initial ramdisks and kernels.
 
 ## EXAMPLES
 
-Instruct u-boot to boot the kernel contained in the given Debian
+Instruct the bootloader to boot the kernel contained in the given Debian
 package on the next startup:
 
     $ edi-boot-shim linux-image-4.18.0-2-arm64
 
 ## COPYRIGHT
 
-**edi and edi-boot-shim** is copyright (c) 2018, Matthias Luescher. Released
+**edi and edi-boot-shim** is copyright (c) 2021, Matthias Luescher. Released
 under the GNU Lesser General Public License.
 
 ## SEE ALSO
