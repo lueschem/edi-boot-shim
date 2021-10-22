@@ -56,7 +56,7 @@ copy_or_link()
     local DEST="${2}"
     if [ "$(stat -c "%m" "${SOURCE%/*}")" == "$(stat -c "%m" "${DEST%/*}")" ]
     then
-        ln -sf "${SOURCE}" "${DEST}"
+        ln -srf "${SOURCE}" "${DEST}"
     else
         cp "${SOURCE}" "${DEST}"
     fi
