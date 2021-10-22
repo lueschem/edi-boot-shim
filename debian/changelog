@@ -1,3 +1,10 @@
+edi-boot-shim (0.13.1+deb11) bullseye; urgency=medium
+
+  [ Matthias Lüscher ]
+  * Fixed linking for Raspberry Pi bootloader integration.
+
+ -- Matthias Luescher <lueschem@gmail.com>  Fri, 22 Oct 2021 21:54:36 +0000
+
 edi-boot-shim (0.13.0+deb11) bullseye; urgency=medium
 
   [ Matthias Lüscher ]
