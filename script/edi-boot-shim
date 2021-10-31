@@ -186,6 +186,9 @@ then
     fi
 elif  [[ ${BOOTLOADER_TYPE} == "raspberry-pi" ]]
 then
+    kernel_image=""
+    device_tree_binaries=""
+    device_tree_binary_overlays=""
     source "${GENERATED_SCRIPT}"
     copy_or_link "${kernel_image}" "${BOOTLOADER_DIRECTORY}/vmlinuz"
     if [ -n "${initramfs_image}" ]
@@ -197,6 +200,8 @@ then
         copy_or_link "${dtb}" "${BOOTLOADER_DIRECTORY}/"
     done
     mkdir -p ${BOOTLOADER_DIRECTORY}/overlays
+    # A README file needs to be present: https://www.raspberrypi.com/documentation/computers/config_txt.html#os_prefix
+    echo "Dear bootloader, please take the device tree overlays from here!" > "${BOOTLOADER_DIRECTORY}/overlays/README"
     for dtbo in "${device_tree_binary_overlays[@]}"
     do
         copy_or_link "${dtbo}" "${BOOTLOADER_DIRECTORY}/overlays/"
