@@ -1,0 +1,45 @@
+name: edi-boot-shim package build
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+       include:
+         - distribution: debian
+           distribution_release: bullseye
+           repository_type: packagecloud
+    steps:
+      - name: Check out the source code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Pull docker container
+        run: docker pull "${DISTRIBUTION}":"${DISTRIBUTION_RELEASE}"
+        env:
+          DISTRIBUTION: ${{ matrix.distribution }}
+          DISTRIBUTION_RELEASE: ${{ matrix.distribution_release }}
+      - name: Run build job within docker container
+        run: docker run -v $(pwd):/data/runner "${DISTRIBUTION}":"${DISTRIBUTION_RELEASE}" bash -c "/data/runner/.github/scripts/build-package"
+        env:
+          DISTRIBUTION: ${{ matrix.distribution }}
+          DISTRIBUTION_RELEASE: ${{ matrix.distribution_release }}
+      - name: Upload package to packagecloud repository
+        run: ./.github/scripts/upload-package-packagecloud "${GITHUB_REF##*/}" "${PACKAGECLOUD_USER}" "${PACKAGECLOUD_REPOSITORY}" "${DISTRIBUTION}" "${DISTRIBUTION_RELEASE}"
+        env:
+          DISTRIBUTION: ${{ matrix.distribution }}
+          DISTRIBUTION_RELEASE: ${{ matrix.distribution_release }}
+          PACKAGECLOUD_USER: ${{ secrets.PACKAGECLOUD_USER }}
+          PACKAGECLOUD_REPOSITORY: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
+        if: matrix.repository_type == 'packagecloud'
