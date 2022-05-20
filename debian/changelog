@@ -1,3 +1,11 @@
+edi-boot-shim (1.0.0) jammy; urgency=medium
+
+  [ Matthias Lüscher ]
+  * Get rid of using unit addresses in FIT dts files. Closes #3.
+  * Added workflow for package build.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 20 May 2022 14:49:32 +0200
+
 edi-boot-shim (0.13.2+deb11) bullseye; urgency=medium
 
   [ Matthias Lüscher ]

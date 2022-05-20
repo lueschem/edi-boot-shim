@@ -5,13 +5,14 @@
     #address-cells = <1>;
   
     images {
-        default@1 {
+        default = "bootscript-1";
+        bootscript-1 {
             description = "default setup";
             data = /incbin/("__BOOT_COMMAND_SCRIPT__");
             type = "script";
             arch = "__U_BOOT_ARCHITECTURE__";
             compression = "none";
-            hash@1 {
+            hash-1 {
                 algo = "sha1";
             };
         };

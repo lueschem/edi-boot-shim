@@ -5,7 +5,7 @@
     #address-cells = <1>;
 
     images {
-        kernel@0 {
+        kernel-0 {
             description = "Linux kernel";
             data = /incbin/("/boot/vmlinuz-__KERNEL_PACKAGE_VERSION__");
             type = "kernel";
@@ -14,11 +14,11 @@
             load = <0x80800000>;
             entry = <0x80800000>;
             compression = "none";
-            hash@1 {
+            hash-1 {
                 algo = "sha1";
             };
         };
-        fdt@0 {
+        fdt-0 {
             description = "device tree blob";
             data = /incbin/("/usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/imx7d-cb3.dtb");
             type = "flat_dt";
@@ -26,11 +26,11 @@
             load = <0x83000000>;
             entry = <0x83000000>;
             compression = "none";
-            hash@1 {
+            hash-1 {
                 algo = "sha1";
             };
         };
-	fdt@1 {
+        fdt-1 {
             description = "device tree blob";
             data = /incbin/("/usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/imx7d-cb3-proto.dtb");
             type = "flat_dt";
@@ -38,42 +38,42 @@
             load = <0x83000000>;
             entry = <0x83000000>;
             compression = "none";
-            hash@1 {
+            hash-1 {
                 algo = "sha1";
             };
         };
 
-        ramdisk@0 {
+        ramdisk-0 {
             description = "ramdisk";
             data = /incbin/("/boot/initrd.img-__KERNEL_PACKAGE_VERSION__");
             type = "ramdisk";
             arch = "arm";
             os = "linux";
             compression = "gzip";
-            hash@1 {
+            hash-1 {
                 algo = "sha1";
             };
         };
     };
     configurations {
-        default = "conf@1";
-        conf@1 {
+        default = "conf-1";
+        conf-1 {
             description = "boot Linux kernel with dtb and ramdisk";
-            kernel = "kernel@0";
-            fdt = "fdt@0";
-            ramdisk = "ramdisk@0";
-            signature@1 {
+            kernel = "kernel-0";
+            fdt = "fdt-0";
+            ramdisk = "ramdisk-0";
+            signature-1 {
                 algo = "sha1,rsa2048";
                 key-name-hint = "fit-key";
                 sign-images = "fdt", "kernel", "ramdisk";
             };
         };
-	conf@2 {
+        conf-2 {
             description = "boot Linux kernel with dtb and ramdisk";
-            kernel = "kernel@0";
-            fdt = "fdt@1";
-            ramdisk = "ramdisk@0";
-            signature@1 {
+            kernel = "kernel-0";
+            fdt = "fdt-1";
+            ramdisk = "ramdisk-0";
+            signature-1 {
                 algo = "sha1,rsa2048";
                 key-name-hint = "fit-key";
                 sign-images = "fdt", "kernel", "ramdisk";
