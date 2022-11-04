@@ -1,7 +1,28 @@
 setenv bootargs console=${console} root=${edi_root_device} rw rootwait ${cma_size} systemd.setenv=boot_device=${edi_boot_device} systemd.setenv=data_device=${edi_data_device}
 
 ext4load mmc ${edi_mmc_device} ${loadaddr} /boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
-ext4load mmc ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/freescale/${fdt_file}
+if ext4load mmc ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/freescale/${fdt_file}
+then
+    echo "Successfully loaded ${fdt_file}."
+else
+    if test "${fdt_file}" == "imx8mn-var-som.dtb"
+    then
+        # The dtb got renamed, let's assume we are on a legacy symphony board.
+        # See also: https://github.com/varigit/uboot-imx/commit/f9a2eaebde90379d9417008b596a3d33d8197d24 
+        if ext4load mmc ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/freescale/imx8mn-var-som-symphony-legacy.dtb
+        then
+            echo "Warning: Successfully loaded fallback dtb imx8mn-var-som-symphony-legacy.dtb."
+        else
+            echo "Error: Neither ${fdt_file} nor imx8mn-var-som-symphony-legacy.dtb found!"
+            sleep 60
+            reset
+        fi
+    else
+        echo "Error: ${fdt_file} not found!"
+        sleep 60
+        reset
+    fi
+fi
 
 booti ${loadaddr} - ${fdt_addr}
 
