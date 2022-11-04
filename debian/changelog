@@ -1,3 +1,10 @@
+edi-boot-shim (1.1) jammy; urgency=medium
+
+  [ Matthias Lüscher ]
+  * var-som-mx8m-nano: Added fallback logic so that an old bootloader on a legacy symphony board can still boot a recent kernel.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 04 Nov 2022 22:52:29 +0100
+
 edi-boot-shim (1.0.0) jammy; urgency=medium
 
   [ Matthias Lüscher ]
