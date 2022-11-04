@@ -1,3 +1,9 @@
+edi-boot-shim (1.1.1) jammy; urgency=medium
+
+  * Fixed package version.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 04 Nov 2022 23:18:15 +0100
+
 edi-boot-shim (1.1) jammy; urgency=medium
 
   [ Matthias Lüscher ]
