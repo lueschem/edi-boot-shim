@@ -7,20 +7,41 @@ then
 else
     if test "${fdt_file}" == "imx8mn-var-som.dtb"
     then
+        # We end up here if we have a pretty old bootloader.
         # The dtb got renamed, let's assume we are on a legacy symphony board.
         # See also: https://github.com/varigit/uboot-imx/commit/f9a2eaebde90379d9417008b596a3d33d8197d24 
         if ext4load mmc ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/freescale/imx8mn-var-som-symphony-legacy.dtb
         then
             echo "Warning: Successfully loaded fallback dtb imx8mn-var-som-symphony-legacy.dtb."
         else
-            echo "Error: Neither ${fdt_file} nor imx8mn-var-som-symphony-legacy.dtb found!"
+            # Later the dtbs got merged again: https://github.com/varigit/uboot-imx/commit/adb40efd0f96e1fa3227fee750e331bf351c3a02
+            if ext4load mmc ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/freescale/imx8mn-var-som-symphony.dtb
+            then
+                echo "Warning: Successfully loaded second fallback dtb imx8mn-var-som-symphony.dtb."
+            else
+                echo "Error: Neither ${fdt_file} nor imx8mn-var-som-symphony-legacy.dtb nor imx8mn-var-som-symphony.dtb found!"
+                sleep 60
+                reset
+            fi
+        fi
+    else
+        if test "${fdt_file}" == "imx8mn-var-som-symphony-legacy.dtb"
+        then
+            # We end up here if we have a newer bootloader that wants to load a legacy dtb but the kernel offers only the merged dtb.
+            # See also https://github.com/varigit/uboot-imx/commit/adb40efd0f96e1fa3227fee750e331bf351c3a02
+            if ext4load mmc ${edi_mmc_device} ${fdt_addr} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/freescale/imx8mn-var-som-symphony.dtb
+            then
+                echo "Warning: Successfully loaded fallback dtb imx8mn-var-som-symphony.dtb."
+            else
+                echo "Error: Neither ${fdt_file} nor imx8mn-var-som-symphony.dtb found!"
+                sleep 60
+                reset
+            fi
+        else
+            echo "Error: ${fdt_file} not found!"
             sleep 60
             reset
         fi
-    else
-        echo "Error: ${fdt_file} not found!"
-        sleep 60
-        reset
     fi
 fi
 
