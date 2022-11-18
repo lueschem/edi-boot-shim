@@ -1,3 +1,10 @@
+edi-boot-shim (1.1.2) jammy; urgency=medium
+
+  [ Matthias Lüscher ]
+  * var-som-mx8m-nano: Handle yet another dtb setup change.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 18 Nov 2022 16:05:58 +0100
+
 edi-boot-shim (1.1.1) jammy; urgency=medium
 
   * Fixed package version.
