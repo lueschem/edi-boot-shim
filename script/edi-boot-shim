@@ -70,6 +70,7 @@ BOOTLOADER_DIRECTORY="/boot/firmware"
 CHECK_MOUNT=true
 BOOT_COMMAND_TEMPLATE="/etc/edi-boot-shim/boot.cmd.rpi.${DEBIAN_ARCHITECTURE}"
 UIMAGE_FIT_TEMPLATE=""
+SCRIPT_FIT_TEMPLATE="/etc/edi-boot-shim/boot.scr.its"
 
 EDI_BOOT_SHIM_CFG="/etc/edi-boot-shim/edi-boot-shim.cfg"
 if [ -f "${EDI_BOOT_SHIM_CFG}" ]
@@ -179,7 +180,7 @@ then
         sed -i 's@__KERNEL_PACKAGE_VERSION__@'"${KERNEL_PACKAGE_VERSION}"'@' "${GENERATED_UIMAGE_ITS}"
         mkimage -f "${GENERATED_UIMAGE_ITS}" "${BOOTLOADER_DIRECTORY}/uimage.${KERNEL_PACKAGE_VERSION}" > /dev/null
 
-        cp /etc/edi-boot-shim/boot.scr.its "${GENERATED_SCRIPT_ITS}"
+        cp "${SCRIPT_FIT_TEMPLATE}" "${GENERATED_SCRIPT_ITS}"
         sed -i 's@__BOOT_COMMAND_SCRIPT__@'"${GENERATED_SCRIPT}"'@' "${GENERATED_SCRIPT_ITS}"
         sed -i 's@__U_BOOT_ARCHITECTURE__@'"${U_BOOT_ARCHITECTURE}"'@' "${GENERATED_SCRIPT_ITS}"
         mkimage -f "${GENERATED_SCRIPT_ITS}" ${BOOTLOADER_DIRECTORY}/boot.scr > /dev/null
