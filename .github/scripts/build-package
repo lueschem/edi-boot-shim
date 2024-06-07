@@ -82,7 +82,7 @@ sudo -H -u ${TESTUSER} git tag -a "v${NEW_VERSION}" -m "New version ${NEW_VERSIO
 
 mk-build-deps -i debian/control -t "apt-get -y" > /dev/null
 
-sudo -H -u ${TESTUSER} debuild -us -uc > /dev/null
+sudo -H -u ${TESTUSER} debuild -us -uc
 
 BUILD_OUTPUT="${SCRIPTDIR}/../../build-output"
 mkdir -p "${BUILD_OUTPUT}"

@@ -2,6 +2,7 @@ Source: edi-boot-shim
 Section: devel
 Priority: optional
 Build-Depends: debhelper (>= 10),
+               fakeroot,
                ruby-ronn (<< 0.8.0) | ronn,
 Maintainer: Matthias Luescher <lueschem@gmail.com>
 Standards-Version: 3.9.8
