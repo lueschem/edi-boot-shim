@@ -17,6 +17,9 @@ jobs:
          - distribution: debian
            distribution_release: bookworm
            repository_type: packagecloud
+         - distribution: debian
+           distribution_release: trixie
+           repository_type: packagecloud
     steps:
       - name: Check out the source code
         uses: actions/checkout@v3

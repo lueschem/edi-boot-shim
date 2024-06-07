@@ -7,9 +7,9 @@ set -o pipefail
 set -o nounset
 
 PACKAGE_NAME=edi-boot-shim
-# there is no VERSION_ID in testing/bookworm
-VERSION_ID="12"
-VERSION="12 (bookworm)"
+# there is no VERSION_ID in trixie/sid yet
+VERSION_ID="13"
+VERSION="13 (trixie)"
 source /etc/os-release
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
