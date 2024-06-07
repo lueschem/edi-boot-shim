@@ -7,9 +7,9 @@ set -o pipefail
 set -o nounset
 
 PACKAGE_NAME=edi-boot-shim
-# there is no VERSION_ID in testing/bookworm
-VERSION_ID="12"
-VERSION="12 (bookworm)"
+# there is no VERSION_ID in trixie/sid yet
+VERSION_ID="13"
+VERSION="13 (trixie)"
 source /etc/os-release
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -82,7 +82,7 @@ sudo -H -u ${TESTUSER} git tag -a "v${NEW_VERSION}" -m "New version ${NEW_VERSIO
 
 mk-build-deps -i debian/control -t "apt-get -y" > /dev/null
 
-sudo -H -u ${TESTUSER} debuild -us -uc > /dev/null
+sudo -H -u ${TESTUSER} debuild -us -uc
 
 BUILD_OUTPUT="${SCRIPTDIR}/../../build-output"
 mkdir -p "${BUILD_OUTPUT}"
