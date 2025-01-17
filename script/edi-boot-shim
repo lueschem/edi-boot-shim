@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2018 Matthias Luescher
+# Copyright (C) 2025 Matthias Luescher
 #
 # Authors:
 #  Matthias Luescher
@@ -75,6 +75,7 @@ SCRIPT_FIT_TEMPLATE="/etc/edi-boot-shim/boot.scr.its"
 EDI_BOOT_SHIM_CFG="/etc/edi-boot-shim/edi-boot-shim.cfg"
 if [ -f "${EDI_BOOT_SHIM_CFG}" ]
 then
+    # shellcheck source=../config/edi-boot-shim.cfg
     source "${EDI_BOOT_SHIM_CFG}"
 fi
 
@@ -84,6 +85,7 @@ then
     for config_part in "${CONFIG_PARTS}"/*.cfg
     do
         [[ -e "${config_part}" ]] || break
+        # shellcheck source=../config/edi-boot-shim.cfg
         source "${config_part}"
     done
 fi
@@ -128,7 +130,7 @@ then
     exit 1
 fi
 
-KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#${KERNEL_PACKAGE_PREFIX}}"
+KERNEL_PACKAGE_VERSION="${KERNEL_PACKAGE_NAME#"${KERNEL_PACKAGE_PREFIX}"}"
 GENERATED_SCRIPT="/tmp/${KERNEL_PACKAGE_NAME}.boot.cmd"
 GENERATED_SCRIPT_ITS="/tmp/${KERNEL_PACKAGE_NAME}.boot.scr.its"
 GENERATED_UIMAGE_ITS="/tmp/${KERNEL_PACKAGE_NAME}.uimage.its"
@@ -190,6 +192,7 @@ then
     kernel_image=""
     device_tree_binaries=""
     device_tree_binary_overlays=""
+    # shellcheck source=../template/boot.spec.rpi5.arm64
     source "${GENERATED_SCRIPT}"
     copy_or_link "${kernel_image}" "${BOOTLOADER_DIRECTORY}/vmlinuz"
     if [ -n "${initramfs_image}" ]
@@ -198,14 +201,24 @@ then
     fi
     for dtb in "${device_tree_binaries[@]}"
     do
-        copy_or_link "${dtb}" "${BOOTLOADER_DIRECTORY}/"
+        if [ -f "${dtb}" ]
+        then
+            copy_or_link "${dtb}" "${BOOTLOADER_DIRECTORY}/"
+        else
+            echo "Warning: Device tree binary '${dtb}' does not exist!"
+        fi
     done
     mkdir -p ${BOOTLOADER_DIRECTORY}/overlays
     # A README file needs to be present: https://www.raspberrypi.com/documentation/computers/config_txt.html#os_prefix
     echo "Dear bootloader, please take the device tree overlays from here!" > "${BOOTLOADER_DIRECTORY}/overlays/README"
     for dtbo in "${device_tree_binary_overlays[@]}"
     do
-        copy_or_link "${dtbo}" "${BOOTLOADER_DIRECTORY}/overlays/"
+        if [ -f "${dtbo}" ]
+        then
+            copy_or_link "${dtbo}" "${BOOTLOADER_DIRECTORY}/overlays/"
+        else
+            echo "Warning: Device tree binary overlay '${dtbo}' does not exist!"
+        fi
     done
 else
     >&2 echo "Error: Unknown bootloader type: ${BOOTLOADER_TYPE}."

@@ -1,3 +1,10 @@
+edi-boot-shim (1.5.0) noble; urgency=medium
+
+  [ Matthias Luescher ]
+  * Added support for more variants of the Raspberry Pi 4 and 5.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 17 Jan 2025 10:10:09 +0100
+
 edi-boot-shim (1.4.1) noble; urgency=medium
 
   [ Matthias Luescher ]
