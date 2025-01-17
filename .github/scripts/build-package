@@ -81,7 +81,7 @@ sudo -H -u ${TESTUSER} git add debian/changelog
 sudo -H -u ${TESTUSER} git commit -m "New version ${NEW_VERSION}."
 sudo -H -u ${TESTUSER} git tag -a "v${NEW_VERSION}" -m "New version ${NEW_VERSION}."
 
-mk-build-deps -i debian/control -t "apt-get -y" > /dev/null
+mk-build-deps -i debian/control -t "apt-get -y"
 
 sudo -H -u ${TESTUSER} debuild -us -uc
 
