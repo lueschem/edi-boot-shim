@@ -1,3 +1,10 @@
+edi-boot-shim (1.6.0) noble; urgency=medium
+
+  [ Matthias Luescher ]
+  * Added support for Compulab ucm-imx8m-plus.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Mon, 17 Mar 2025 21:57:36 +0100
+
 edi-boot-shim (1.5.1) noble; urgency=medium
 
   [ Matthias Luescher ]
