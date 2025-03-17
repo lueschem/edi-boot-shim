@@ -1,0 +1,7 @@
+setenv bootargs console=ttymxc1,115200 console=tty1 net.ifnames=0 root=${edi_root_device} systemd.setenv=boot_device=${edi_boot_device} systemd.setenv=data_device=${edi_data_device} rw rootwait
+
+ext4load ${iface} ${edi_mmc_device} ${loadaddr} /boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
+ext4load ${iface} ${edi_mmc_device} ${fdt_addr_r} /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/compulab/${fdtfile}
+
+booti ${loadaddr} - ${fdt_addr_r}
+
