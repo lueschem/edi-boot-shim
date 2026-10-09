@@ -1,3 +1,10 @@
+edi-boot-shim (1.8.1) resolute; urgency=medium
+
+  [ Matthias Luescher ]
+  * Removed Debian bullseye build.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 09 Oct 2026 09:02:25 +0200
+
 edi-boot-shim (1.8.0) resolute; urgency=medium
 
   [ Matthias Luescher ]
