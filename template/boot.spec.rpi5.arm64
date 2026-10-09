@@ -1,6 +1,6 @@
 kernel_image=/boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
-# the raspberrry pi 5 starts without initramfs
-initramfs_image=""
+# the raspberry pi 5 starts with or without initramfs
+initramfs_image=/boot/initrd.img-__KERNEL_PACKAGE_VERSION__
 device_tree_binaries=(
     /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/broadcom/bcm2712-rpi-5-b.dtb
     /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/broadcom/bcm2712d0-rpi-5-b.dtb
