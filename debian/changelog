@@ -1,3 +1,10 @@
+edi-boot-shim (1.8.0) resolute; urgency=medium
+
+  [ Matthias Luescher ]
+  * Pi3, Pi4, Pi5: Install initramfs image if available.
+
+ -- Matthias Lüscher (Launchpad) <m.luescher@datacomm.ch>  Fri, 09 Oct 2026 08:52:50 +0200
+
 edi-boot-shim (1.7.0) noble; urgency=medium
 
   * Added boot spec for Raspberry Pi 3.
