@@ -197,7 +197,12 @@ then
     copy_or_link "${kernel_image}" "${BOOTLOADER_DIRECTORY}/vmlinuz"
     if [ -n "${initramfs_image}" ]
     then
-        copy_or_link "${initramfs_image}" "${BOOTLOADER_DIRECTORY}/initrd.img"
+        if [ -f "${initramfs_image}" ]
+        then
+            copy_or_link "${initramfs_image}" "${BOOTLOADER_DIRECTORY}/initrd.img"
+        else
+            echo "Remark: Initramfs image '${initramfs_image}' does not exist!"
+        fi
     fi
     for dtb in "${device_tree_binaries[@]}"
     do

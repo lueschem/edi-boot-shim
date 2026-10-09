@@ -1,6 +1,6 @@
 kernel_image=/boot/vmlinuz-__KERNEL_PACKAGE_VERSION__
-# the raspberrry pi 4 starts without initramfs
-initramfs_image=""
+# the raspberry pi 4 starts with or without initramfs
+initramfs_image=/boot/initrd.img-__KERNEL_PACKAGE_VERSION__
 device_tree_binaries=(
     /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/broadcom/bcm2711-rpi-4-b.dtb
     /usr/lib/linux-image-__KERNEL_PACKAGE_VERSION__/broadcom/bcm2711-rpi-400.dtb
